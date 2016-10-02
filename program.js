@@ -1,9 +1,8 @@
-var arr = process.argv;
-
-var toAdd = arr.slice(2);
-
-toAdd.reduce( (prev, curr) => prev + curr );
-
-console.log(toAdd);
-
+var sum = 0;
+var arrayCopy = process.argv;
+for (var i = 2; i <  arrayCopy.length; i++) {
+	var arrayNumber = Number(arrayCopy[i]);
+	sum += arrayNumber;
+	};
+console.log(sum)
 
