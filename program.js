@@ -33,6 +33,20 @@
 // getData();
 
 //  Exercise 5: Filter a list of filenames in a directory for a certain file extension
+// var fs = require('fs');
+// function getFiles() {
+// 	fs.readdir(process.argv[2], function callback(err, list) {
+// 		if (err) throw err;
+// 		var extensionFilter = process.argv[3];
+// 		for (var i = 0; i < list.length; i++) {
+// 			var splitList = list[i].split(".");
+// 			if (splitList[1] == extensionFilter) {
+// 				console.log(list[i]);
+// 			}
+// 		}
+// 	})
+// }
+// getFiles();
 
 var mymodule = require('./mymodule');
 mymodule(process.argv[2],process.argv[3],function(err, data) {
