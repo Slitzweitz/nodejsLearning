@@ -48,7 +48,18 @@
 // }
 // getFiles();
 
-var mymodule = require('./mymodule');
-mymodule(process.argv[2],process.argv[3],function(err, data) {
-	if (err) return callback(err);
-});
+//  Exercise 6: use a module to do the work, require it and call it passing in the command line arguments
+// var mymodule = require('./mymodule');
+// mymodule(process.argv[2],process.argv[3],function(err, data) {
+// 	if (err) return callback(err);
+// });
+
+//  Exercise 7: HTTP client. requires the http core and uses a http.get() method. URL is passed to get()
+var http = require("http")
+
+http.get(process.argv[2], function callback (response) {
+	response.setEncoding("utf8")
+	response.on("data", function (data) {
+		console.log(data)
+	})
+})
