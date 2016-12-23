@@ -1,14 +1,91 @@
-const http = require('http')
-const bl = require('bl')
+//
+//  Exercise 11 - an HTTP file server
+//  Write an HTTP server that serves the same text file for each request it receives
+//  Server should listen on the port provided as 'first' argument
+//  location of file to serve will be 'second' argument
+//  Must use fs.createReadStream() to stream the file contents to the response
 
-http.get(process.argv[2], function callback(response) {
-	response.setEncoding("utf8")
-	response.pipe(bl(function (err, data) {
-		if (err) return err
-		console.log(data.length)
-		console.log(data.toString())
-	}))
-})
+const http = require('http');
+const fs = require('fs');
+var port = process.argv[2];
+
+var server = http.createServer(function (req, res) {
+  var fileToServe = process.argv[3];
+  var readStream = fs.createReadStream(fileToServe);
+  readStream.pipe(res);
+});
+server.listen(port);
+
+// // Exercise 10 - a raw TCP server!
+// const net = require('net')
+// const strftime = require('strftime')
+// var port = process.argv[2]
+//
+// // createServer method to return an instance of the server
+// var server = net.createServer(function (socket) {
+//   // code for socket handling logic
+//   // write the date and 24hr time: YYYY-MM-DD hh:mm
+//   if (port !== "") {
+//     socket.write(strftime('%F %H:%M\n')) // socket.write(currentDate)
+//     socket.end()
+//   }
+// })
+// // must call server.listen(port)
+// server.listen(port)
+
+
+//  Exercise 9: an HTTP server!
+// function getHttp(index, callback) {
+// 	http.get(process.argv[2+ index], function (response) {
+// 		response.setEncoding("utf8")
+// 		response.pipe(bl(function (err, data) {
+// 			if (err) callback(err)
+// 			arrayList[index] = data.toString()
+// 			counter++
+//
+// 			if (counter == 3) {
+// 				printer()
+// 			}
+// 		}))
+// 	})
+// }
+//
+// for (var i = 0; i < 3; i++) {
+// 	getHttp(i)
+// }
+
+// const http = require('http')
+// const bl = require('bl')
+// const async = require('async')
+//
+// function goGet() {
+// 	return new Promise(function(resolve, reject){
+// 		http.get(process.argv[2], function callback(response) {
+// 			response.setEncoding('utf8')
+// 			response.pipe(bl(function (err, data){
+// 				if (err) return reject(err)
+//
+// 			}))
+// 		})
+// 	})
+// }
+//
+
+
+//  Exercise 8
+// 	const http = require('http')
+// 	const bl = require('bl')
+//
+// 	var counter = 0
+// 	 arrayList =[]
+// 	// const urls = process.argv.slice(2)
+//
+// function printer() {
+// 	for (var i = 0; i < 3; i++) {
+// 		console.log(arrayList[i])
+// 	}
+// }
+//
 
 //  Exercise 7: HTTP client. requires the http core and uses a http.get() method. URL is passed to get()
 // var http = require("http")
