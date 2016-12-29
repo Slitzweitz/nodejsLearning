@@ -1,20 +1,52 @@
-//
+// T O P
+
+
+
+
+//  Exercise 12 - an HTTP server that receives only POST requests
+//  It also converts the body of incoming POST requests to upper case and returns it
+//  It should listen on port provided by 'first' argument
+//  Use the streaming capabilities of {request} and {response}
+//  Use through2-map, works much like Array#map()
+
+const http = require('http');
+const fs = require('fs');
+const map = require('through2-map');
+var port = Number(process.argv[2]);
+
+var server = http.createServer(function (request, response) {
+  request.setMaxListeners(0);
+  response.setMaxListeners(0);
+  if (request.method == "POST") {
+    // console.log("POST");
+    request.pipe(map(function (chunk) {
+      return chunk.toString().toUpperCase();
+    })).pipe(response);
+  request.on('error', function(e) {handleError(e)});
+  }
+  else {
+    console.log("Not POST")
+  };
+});
+
+server.listen(port);
+
 //  Exercise 11 - an HTTP file server
 //  Write an HTTP server that serves the same text file for each request it receives
 //  Server should listen on the port provided as 'first' argument
 //  location of file to serve will be 'second' argument
 //  Must use fs.createReadStream() to stream the file contents to the response
-
-const http = require('http');
-const fs = require('fs');
-var port = process.argv[2];
-
-var server = http.createServer(function (req, res) {
-  var fileToServe = process.argv[3];
-  var readStream = fs.createReadStream(fileToServe);
-  readStream.pipe(res);
-});
-server.listen(port);
+//
+// const http = require('http');
+// const fs = require('fs');
+// var port = process.argv[2];
+//
+// var server = http.createServer(function (req, res) {
+//   var fileToServe = process.argv[3];
+//   var readStream = fs.createReadStream(fileToServe);
+//   readStream.pipe(res);
+// });
+// server.listen(port);
 
 // // Exercise 10 - a raw TCP server!
 // const net = require('net')
