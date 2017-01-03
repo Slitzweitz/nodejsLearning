@@ -1,7 +1,50 @@
 // T O P
 
+//  Exercise 13 - an HTTP server that serves JSON data on GET requests
+//  The path is '/api/parsetime'
+//  The request will contain a query string with a key 'iso' and an ISO time as value
+//  E.G. /api/parsetime?iso=2016-12-28T18:35:14.474Z / {iso:"2016-12-28T18:35:14.474Z"}
+//  reqeust.query = {iso: "2016-12-28T18:35:14.474Z"}
+//  The response should only contain 'hour', 'minute', and 'second' props
+//  E.G. {
+//     "hour": 18,
+//     "minute": 22,
+//     "second": 14
+//   }
+//  It should have a second endpoint for '/api/unixtime' which returns e.g. {"unixtime": 137613361858}
 
+const http = require('http');
+const url = require('url');
+var port = Number(process.argv[2]);
 
+var server = http.createServer(function(request, response) {
+  // console.log(request);
+  apiCheck = request.url.split('?')
+  if (request.method == 'GET' && apiCheck[0] === "/api/parsetime") {
+    var obj = url.parse(request.url, true);
+    responseObject = {
+      hour: Number(obj.query.iso.slice(11,13)) - 8,
+      minute: Number(obj.query.iso.slice(14,16)),
+      second: Number(obj.query.iso.slice(17,19))
+    };
+    response.writeHead(200, { 'Content-Type': 'application/json'});
+    response.write(JSON.stringify(responseObject));
+  }
+  else if (apiCheck[0] == "/api/unixtime") {
+    var unix = url.parse(request.url, true);
+    time = unix.query.iso;
+    // console.log(time);
+    dateObject = new Date(time);
+    unixTime = dateObject.getTime();
+    unixObject = {
+      "unixtime": unixTime
+    }
+    response.writeHead(200, { 'Content-Type': 'application/json'});
+    response.write(JSON.stringify(unixObject));
+  }
+  response.end();
+});
+server.listen(port);
 
 //  Exercise 12 - an HTTP server that receives only POST requests
 //  It also converts the body of incoming POST requests to upper case and returns it
@@ -9,27 +52,27 @@
 //  Use the streaming capabilities of {request} and {response}
 //  Use through2-map, works much like Array#map()
 
-const http = require('http');
-const fs = require('fs');
-const map = require('through2-map');
-var port = Number(process.argv[2]);
-
-var server = http.createServer(function (request, response) {
-  request.setMaxListeners(0);
-  response.setMaxListeners(0);
-  if (request.method == "POST") {
-    // console.log("POST");
-    request.pipe(map(function (chunk) {
-      return chunk.toString().toUpperCase();
-    })).pipe(response);
-  request.on('error', function(e) {handleError(e)});
-  }
-  else {
-    console.log("Not POST")
-  };
-});
-
-server.listen(port);
+// const http = require('http');
+// const fs = require('fs');
+// const map = require('through2-map');
+// var port = Number(process.argv[2]);
+//
+// var server = http.createServer(function (request, response) {
+//   request.setMaxListeners(0);
+//   response.setMaxListeners(0);
+//   if (request.method == "POST") {
+//     // console.log("POST");
+//     request.pipe(map(function (chunk) {
+//       return chunk.toString().toUpperCase();
+//     })).pipe(response);
+//   request.on('error', function(e) {handleError(e)});
+//   }
+//   else {
+//     console.log("Not POST")
+//   };
+// });
+//
+// server.listen(port);
 
 //  Exercise 11 - an HTTP file server
 //  Write an HTTP server that serves the same text file for each request it receives
